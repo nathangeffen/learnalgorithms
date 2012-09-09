@@ -1,0 +1,107 @@
+<!-- HTML for handling visualization of different sort methods
+
+Copyright (c) 2012 Nathan Geffen
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sort visualizations</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script type="text/javascript" src="sort.js"></script>
+    <style type="text/css">
+      .highlight-index {color:red;}
+      .operation {color: blue;}
+    </style>
+  </head>
+  <body>
+    <h1>Learn how different sorting algorithms work</h1>
+
+    <p>
+      Enter strings to sort separated by a space (or simply use the 
+      default list of 10 digits provided). 
+    </p>
+    <textarea id="list-to-sort" rows="10" cols="80">2 9 6 4 0 3 6 7 9 1</textarea>
+
+    <form>      
+      <p
+        <label for="number-elements-edit">List size</label>
+        <input type="text" name="number-elements" 
+               id="number-elements-edit" value="10" />
+        <label for="random-order">Random</label>
+        <input type="radio" name="order" id="random-order" 
+               checked="checked" />
+        <label for="ascending-order">Ascending in order</label>
+        <input type="radio" name="order" id="ascending-order" />
+        <label for="descending-order">Descending in order</label>
+        <input type="radio" name="order" 
+               id="descending-order" />
+        <button id="generate-button" type="button"
+                onclick="generate()">
+          Generate
+        </button>        
+      </p>
+      <p>Sort type:
+        <label for="selectionsort-choice">Selection sort</label>
+        <input type="radio" name="sort-type" id="selectionsort-choice" checked="checked" />
+        <label for="bubblesort-choice">Bubble sort</label>
+        <input type="radio" name="sort-type" id="bubblesort-choice" />        
+        <label for="insertionsort-choice">Insertion sort</label>
+        <input type="radio" name="sort-type" id="insertionsort-choice" />
+        <label for="mergesort-choice">Merge sort</label>
+        <input type="radio" name="sort-type" id="mergesort-choice" />
+        <label for="quicksort-choice">Quicksort</label>
+        <input type="radio" name="sort-type" id="quicksort-choice" />
+        <label for="heapsort-choice">Heap sort</label>
+        <input type="radio" name="sort-type" id="heapsort-choice" />            
+      </p>
+
+      <p>Sort order:
+        <label for="alphanumeric-choice">Alphanumeric</label>
+        <input type="radio" name="alpha-vs-num"
+               id="alphanumeric-choice" checked="checked" />
+        <label for="numeric-choice">Numeric</label>
+        <input type="radio" name="alpha-vs-num" 
+               id="numeric-choice"/>
+      </p>
+
+      <p> 
+        <label for="show-steps">Show steps</label>
+        <input type="checkbox" name="display-options" id="show-steps" checked="checked" /> (Note: if the list has more than 80 elements
+steps will not be show.)
+      </p>
+      <p>
+        <button id="sort-button" type="button" onclick="sort()"> Sort</button>
+      <p/>
+    </form> 
+    <div id="output">
+    </div>
+    <div id="footer">
+      <hr />
+      <p>Copyright (c) 2012 <a href="http://nathangeffen.webfactional.com">Nathan Geffen</a> under the 
+        <a href="http://opensource.org/licenses/mit-license.php">MIT license.</a></p>
+      <p>Please report bugs to nathangeffen at quackdown.info.</p>
+    </div>
+  </body>
+</html>
