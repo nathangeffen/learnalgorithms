@@ -28,7 +28,21 @@
 
 */
 
-var basicOps = 0;
+"use strict";
+
+
+/* TO DO: Drive the program from a JSON object that includes
+   information on each sort.
+var sortInfo = {
+    "selectionSort": {
+        "Name": "Selection sort",
+        "Time efficiency": "&theta; (n<sup>2</sup>)"
+    }
+
+}
+
+*/
+
 var measurements = { "comparisons":0,
                      "swaps":0,
                      "moves":0,
@@ -39,7 +53,7 @@ var measurements = { "comparisons":0,
 var showsteps = true;
 var outputHTML = "";
 
-generate = function() {
+var generate = function() {
     var number_elements = document.
         getElementById("number-elements-edit").value;
     var list = [];
@@ -57,13 +71,17 @@ generate = function() {
     document.getElementById("list-to-sort").innerHTML = list.join(" ");
 }
 
-sort = function() {
+var sort = function() {
+
+    var totalTime = 0;
+    var basicOps = 0;
+
     document.getElementById("sort-button").disabled = true;    
-    listToSort = document.getElementById("list-to-sort").
+    var listToSort = document.getElementById("list-to-sort").
         value.rtrim().split(/\s+/);
 
     if(document.getElementById("numeric-choice").checked) {
-        for (i in listToSort) 
+        for (var i in listToSort) 
             listToSort[i] = +listToSort[i];
     };
 
@@ -81,22 +99,32 @@ sort = function() {
         "<p>List too large to show steps.</p>"
         showsteps = false;
     }
-    for (op in measurements) measurements[op] = 0;
+    for (var op in measurements) measurements[op] = 0;
     basicOps = 0;
 
-    if (listToSort.length) {        
-        if (document.getElementById("selectionsort-choice").checked)
+    if (listToSort.length) {
+        var e = document.getElementById("sort-algorithm");
+        var sortSelect = e.options[e.selectedIndex].value;
+
+        var timeStart =  new Date().getTime();
+
+        if (sortSelect == "selectionsort-choice")
             selectionsort(listToSort)
-        else if (document.getElementById("insertionsort-choice").checked)
+        else if (sortSelect == "insertionsort-choice")
             insertionsort(listToSort);
-        else if (document.getElementById("bubblesort-choice").checked)
+        else if (sortSelect == "bubblesort-choice")
             bubblesort(listToSort);
-        else if (document.getElementById("mergesort-choice").checked)
+        else if (sortSelect == "mergesort-choice")
             mergesort(listToSort);
-        else if (document.getElementById("quicksort-choice").checked)
+        else if (sortSelect == "quicksort-choice")
             quicksort(listToSort);
-        else 
+        else if (sortSelect == "heapsort-choice")
             heapsort(listToSort);
+        else 
+            shellsort(listToSort);
+
+        var timeEnd = new Date().getTime();
+        totalTime = timeEnd - timeStart;
     }
     showsteps = true;
     outputDiv.innerHTML += outputHTML;
@@ -116,13 +144,14 @@ sort = function() {
     outputDiv.innerHTML += outputHTML;
     outputHTML = "";
     outputDiv.innerHTML += "<p>Basic operations: " + basicOps + "</p>";
+    outputDiv.innerHTML += "<p>Sort time in milliseconds: " + totalTime + "</p>";
     document.getElementById("sort-button").disabled = false;
 }
 
-output = function(list, index1, index2, operation, truncate) {
+var output = function(list, index1, index2, operation, truncate) {
     if (!showsteps) return 1;
     var text = "<p>";
-    to = null != truncate ? truncate : list.length;
+    var to = null != truncate ? truncate : list.length;
     for (var i=0; i<to; i++)  {
         if ( (null != index1 && i == index1) || 
              (null != index2 && i == index2) ) {
@@ -141,7 +170,7 @@ output = function(list, index1, index2, operation, truncate) {
     return 1;
 }
 
-selectionsort = function(list) {
+var selectionsort = function(list) {
     for (var i = 0; i < list.length-1; i++) {
         var min = i;
         for (var j = i+1; j<list.length; j++) {
@@ -156,7 +185,7 @@ selectionsort = function(list) {
     }
 }
 
-insertionsort = function(list) {
+var insertionsort = function(list) {
     for (var i = 1; i<list.length; i++) {
         var v = list[i];
         var j = i - 1;
@@ -181,7 +210,7 @@ insertionsort = function(list) {
 };
 
 
-bubblesort = function(list) {
+var bubblesort = function(list) {
     var sorted;
     for (var i = 0; i<list.length - 1; i++) {
         for (var j = 0; j<list.length-1-i; j++) {
@@ -202,7 +231,7 @@ bubblesort = function(list) {
     }
 }
 
-copy = function(A, from, to, C, insertpoint) {
+var copy = function(A, from, to, C, insertpoint) {
     var j = insertpoint;
     for (var i=from; i<to; i++) {
         ++measurements["copies"];
@@ -211,10 +240,13 @@ copy = function(A, from, to, C, insertpoint) {
     }
 }
 
-merge = function(B, C, A) {
+var merge = function(B, C, A) {
 
     var i=0, j=0, k=0;
     var p = B.length, q = C.length;
+
+    output((B+","+"|,"+C).split(","), -1, -1, 
+           "Merging these two lists.");
 
     while(i<p && j<q) {
         if (++measurements["comparisons"] && B[i] <= C[j]) {
@@ -222,7 +254,8 @@ merge = function(B, C, A) {
                    (B[i] + " <= ") + C[j]);
             ++measurements["moves"];
             A[k] = B[i];
-            output(A, -1, -1, "Merged list so far: ", k);
+            output(A, k, -1, "Moving " + A[k] + " into merged list.",
+                  k+1);
             ++i;
         }
         else {
@@ -230,7 +263,8 @@ merge = function(B, C, A) {
                    (B[i] + " > ") + C[j], k);
             ++measurements["moves"];
             A[k] = C[j];
-            output(A, -1, -1, "Merged list so far: ");
+            output(A, k, -1, "Moving " + A[k] + " into merged list.", 
+                   k+1);
             ++j;
         }
         ++k;
@@ -239,11 +273,11 @@ merge = function(B, C, A) {
         copy(C, j, C.length, A, k);
     else
         copy(B, i, B.length, A, k); 
-    output(A, -1, -1, "After merge");
+    output(A, -1, -1, "Merge completed");
 }
 
 
-mergesort = function(A) {  
+var mergesort = function(A) {  
 
     if (A.length > 1) {
         var B = new Array();
@@ -258,14 +292,14 @@ mergesort = function(A) {
     }
 }
 
-swap = function(A, i1, i2) {
+var swap = function(A, i1, i2) {
   var t = A[i1];
   A[i1] = A[i2];
   A[i2] = t;
 }
 
 
-hoarePartition = function(A, l, r) {
+var hoarePartition = function(A, l, r) {
 
     var p = A[r];
     var i = l-1;
@@ -293,7 +327,7 @@ hoarePartition = function(A, l, r) {
 }
 
 
-qsort = function(A, l, r) {
+var qsort = function(A, l, r) {
     if (l < r) {
         var s = hoarePartition(A, l, r);
         qsort(A, l, s-1);
@@ -301,7 +335,7 @@ qsort = function(A, l, r) {
     }
 }
 
-quicksort = function(A) {
+var quicksort = function(A) {
     qsort(A, 0, A.length-1);
 }
 
@@ -313,7 +347,7 @@ quicksort = function(A) {
  */
 
 
-downheap = function(A, v, n, desc) {
+var downheap = function(A, v, n, desc) {
     var w=2*v+1;    // first descendant of v
     while (w<n) {
         if (w+1<n)    // is there a second descendant?
@@ -338,12 +372,12 @@ downheap = function(A, v, n, desc) {
 
 
 
-buildheap = function(A, n) {
+var buildheap = function(A, n) {
     for (var v=Math.floor(n/2)-1; v>=0; v--)
         downheap(A, v, n, "In heap construction. ");    
 }
 
-heapsort = function(A) {
+var heapsort = function(A) {
     var n=A.length;    
     buildheap(A, n);
     while (n>1) {
@@ -357,6 +391,27 @@ heapsort = function(A) {
 
 
 
+/*
+  Based on the pseudo-code for Shellsort at
+  http://en.wikipedia.org/wiki/Shellsort
+*/
+
+var shellsort = function(list) {
+    var gaps = [701, 301, 132, 57, 23, 10, 4, 1];
+ 
+    for(var gap in gaps) {
+        for (var i = gap; i < list.length; ++i) {
+            var temp = list[i];
+            for (var j = i; j >= gap && 
+                 ++measurements["comparisons"] &&
+                 list[j - gap] > temp; j -= gap) {
+                list[j] = list[j - gap]
+            }
+            list[j] = temp
+        }
+    }
+}
+
 String.prototype.trim = function() {
 	return this.replace(/^\s+|\s+$/g,"");
 }
@@ -366,3 +421,5 @@ String.prototype.ltrim = function() {
 String.prototype.rtrim = function() {
 	return this.replace(/\s+$/,"");
 }
+
+
