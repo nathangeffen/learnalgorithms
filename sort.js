@@ -351,7 +351,7 @@ var downheap = function(A, v, n, desc) {
     var w=2*v+1;    // first descendant of v
     while (w<n) {
         if (w+1<n)    // is there a second descendant?
-            if (output(A, w+1, w, desc + "Looking for 2nd descendent.") &&
+            if (output(A, w+1, v, desc + "Looking for 2nd descendent of " + A[v]) &&
                 ++measurements["comparisons"] && 
                 A[w+1]>A[w]) 
                 w++;
@@ -364,7 +364,7 @@ var downheap = function(A, v, n, desc) {
         // otherwise        
         ++measurements["swaps"];
         swap(A, v, w);  // exchange labels of v and w
-        output(A, v, w, desc + "After swap.")
+        output(A, v, w, desc + "Swapping to satisfy heap property.")
         v=w;        // continue
         w=2*v+1;
     }
