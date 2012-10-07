@@ -320,8 +320,10 @@ var hoarePartition = function(A, l, r) {
         ++measurements["swaps"];
         swap(A, i, j);
     } while( i < j);
+    ++measurements["swaps"];
     output(A, i, j, "Undoing extra swap");
     swap(A, i, j);
+    ++measurements["swaps"];
     output(A, l, j, "Swapping pivot into correct position");
     swap(A, l, j);
     return j;
