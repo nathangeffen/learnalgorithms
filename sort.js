@@ -301,29 +301,27 @@ var swap = function(A, i1, i2) {
 
 var hoarePartition = function(A, l, r) {
 
-    var p = A[r];
-    var i = l-1;
-    var j = r;
-
-    for(;;) {
-        while(++measurements["comparisons"] && 
-              output(A, i+1, r, ("Moving forward. Compare pivot " + p + " to " + A[i+1])) &&
-              A[++i] < p);
-        while(++measurements["comparisons"] && 
-              output(A, j-1, r, ("Moving back. Compare pivot " + p + " to " + A[j-1])) &&
-              p < A[--j]) 
-            if (j==1) break;
-        if (i >= j) break;
-        output(A, i, j, "Before swap");
+    var p = A[l];
+    var i = l;
+    var j = r + 1;
+    
+    do {
+        do {
+            ++i;
+        } while (++measurements["comparisons"] && 
+                 output(A, l, i, "Moving forward and comparing to pivot") &&
+                 A[i] < p);
+        do {
+            --j;
+        } while (++measurements["comparisons"] &&
+                 output(A, l, j, "Moving back and comparing to pivot") && 
+                 A[j] > p);
         ++measurements["swaps"];
         swap(A, i, j);
-        output(A, i, j, "After swap");
-    }
-    output(A, i, r, "Before pivot swap");
-    ++measurements["swaps"];
-    swap(A, i, r);
-    output(A, i, r, "After pivot swap");
-    return i;
+    } while( i < j);
+    swap(A, i, j);
+    swap(A, l, j);
+    return j;
 }
 
 
