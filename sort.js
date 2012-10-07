@@ -316,10 +316,13 @@ var hoarePartition = function(A, l, r) {
         } while (++measurements["comparisons"] &&
                  output(A, l, j, "Moving back and comparing to pivot") && 
                  A[j] > p);
+        output(A, i, j, "Swapping");
         ++measurements["swaps"];
         swap(A, i, j);
     } while( i < j);
+    output(A, i, j, "Undoing extra swap");
     swap(A, i, j);
+    output(A, l, j, "Swapping pivot into correct position");
     swap(A, l, j);
     return j;
 }
