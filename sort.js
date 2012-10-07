@@ -68,7 +68,7 @@ var generate = function() {
         for (var i = number_elements-1; i >= 0; i--) 
             list.push(i);
 
-    document.getElementById("list-to-sort").innerHTML = list.join(" ");
+    document.getElementById("list-to-sort").value = list.join(" ");
 }
 
 var sort = function() {
@@ -252,7 +252,8 @@ var merge = function(B, C, A) {
         if (++measurements["comparisons"] && B[i] <= C[j]) {
             output((B+","+"|,"+C).split(","), i, B.length+j+1, 
                    (B[i] + " <= ") + C[j]);
-            ++measurements["moves"];
+            // Don't think next line is correct so commented out.
+            // ++measurements["moves"]; 
             A[k] = B[i];
             output(A, k, -1, "Moving " + A[k] + " into merged list.",
                   k+1);
@@ -261,7 +262,8 @@ var merge = function(B, C, A) {
         else {
             output((B+","+"|,"+C).split(","), i, B.length+j+1, 
                    (B[i] + " > ") + C[j], k);
-            ++measurements["moves"];
+            // Don't think next line is correct so commented out.
+            // ++measurements["moves"];
             A[k] = C[j];
             output(A, k, -1, "Moving " + A[k] + " into merged list.", 
                    k+1);
